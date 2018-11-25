@@ -5,9 +5,9 @@ public class Salario
     private double salhor;
     private double salmen;
     private double comis;
-    private double vendas;
-    private double taxas;
-    private double saltot;
+    private double vendas = 0;
+    private double taxas = 0;
+    private double saltot = 0;
 
     public double getSalhor() { return salhor; }
     public void setSalhor(double salhor) { this.salhor = salhor; }

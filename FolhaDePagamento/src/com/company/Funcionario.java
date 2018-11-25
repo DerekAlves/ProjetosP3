@@ -9,8 +9,8 @@ public class Funcionario
     private String endereco;
     private int tiponum;
     private String tipostr;
-    private int diaw;
-    private int horw;
+    private int diaw = 0;
+    private double horw = 0;
     private Salario salario;
 
     public static int getGid() { return gid; }
@@ -37,7 +37,6 @@ public class Funcionario
     public int getDiaw() { return diaw; }
     public void setDiaw(int diaw) { this.diaw = diaw; }
 
-    public int getHorw() { return horw; }
-    public void setHorw(int horw) { this.horw = horw; }
-
+    public double getHorw() { return horw; }
+    public void setHorw(double horw) { this.horw = horw; }
 }
