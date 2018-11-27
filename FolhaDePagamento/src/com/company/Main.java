@@ -1,12 +1,52 @@
 package com.company;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.lang.String;
 
 public class Main {
     static Scanner in = new Scanner(System.in);
     static int sem = 1;
+    //static String[] mes = new String[31];
+    public class Lista { ArrayList<Funcionario> Lista; }
+    public static Stack<Lista> pilhaundo = new Stack<Lista>();
+    public static Stack<Lista> pilharedo = new Stack<Lista>();
+
+
+
+    static void zerarContabilizar(ArrayList<Funcionario> ListaFuncionarios)
+    {
+        int i;
+        double hor;
+        for(i = 0; i < ListaFuncionarios.size(); i++)
+        {
+            if(ListaFuncionarios.get(i).getTiponum() == 1)
+            {
+                hor = ListaFuncionarios.get(i).getHj();
+                if(hor > 8) hor = hor*1.5;//contabiliza 1.5
+                ListaFuncionarios.get(i).setHorw(ListaFuncionarios.get(i).getHorw() + hor);
+                ListaFuncionarios.get(i).setHj(0);
+            }
+            else
+            {
+                ListaFuncionarios.get(i).setDiaw(ListaFuncionarios.get(i).getDiaw() + (int)ListaFuncionarios.get(i).getHj());
+                ListaFuncionarios.get(i).setHj(0);
+            }
+        }
+    }
+
+
+    /*static void doPayment(Funcionario funcionario)
+    {
+
+    }*/
+
+
+    static boolean findDay(int a[], int dia)
+    {
+        int i;
+        for(i = 0; i < 5; i++) if(dia == a[i]) return true;
+        return false;
+    }
+
 
     static void printFunc(ArrayList<Funcionario> ListaFuncionarios, int id)
     {
@@ -93,6 +133,9 @@ public class Main {
                 novos.setComis(in.nextDouble());
                 //System.out.print("\n");
             }
+            System.out.print("O método de pagamento é mensalmente, ao final do mês.\n");
+            int a[] = {31, 0, 0, 0, 0};
+            novo.setPaymentdays(a);
 
             //System.out.printf("Tipo %.2s, salario hora %.2f, salario mensal %.2f, comissao %.2f.\n", novo.getTipostr(), novos.getSalhor(), novos.getSalmen(), novos.getComis());//teste
             novo.setSalario(novos);
@@ -122,25 +165,6 @@ public class Main {
                 return aux;
             }
         }
-
-        /*for (i = 0; i < ListaFuncionarios.size(); i++)
-        {
-            //System.out.printf("I %d, ID %d, nome %s, size %d\n", i, ListaFuncionarios.get(i).getId(), ListaFuncionarios.get(i).getNome(), ListaFuncionarios.size());
-            if (ListaFuncionarios.get(i).getId() == id)
-            {
-                System.out.print("Funcionário Econtrado!\n");
-                System.out.print("Deseja realmente remover o funcionário? 1 - [S] || 0 - [N].\n");
-                option = in.nextInt();
-                if(option == 1)
-                {
-                    aux = ListaFuncionarios.remove(i);
-                    System.out.print("Funcionário removido com sucesso!\n");
-                    return aux;
-                }
-            }
-        }
-        return null;*/
-        //ListarFuncionarios(ListaFuncionarios);
         return null;
     }
 
@@ -158,14 +182,18 @@ public class Main {
             if(ListaFuncionarios.get(i).getTiponum() == 1)
             {
                 System.out.print("O funcionário é Horista, digite a quantidade de horas trabalhadas: ");
-                ListaFuncionarios.get(i).setHorw(ListaFuncionarios.get(i).getHorw() + in.nextDouble());
+                ListaFuncionarios.get(i).setHj(ListaFuncionarios.get(i).getHj() + in.nextDouble());
                 System.out.print("Se excedido 8 horas diárias, cada hora a mais irá custar 50% a mais.\n");
             }
             else if(ListaFuncionarios.get(i).getTiponum() == 2 || ListaFuncionarios.get(i).getTiponum() == 3)
             {
-                System.out.print("O funcionário é Assalariado ou Comissionado, Trabalhou o dia de hoje? [1] para Sim, [0] para Não.\nSe sim um dia de trabalho será incrementado.");
-                option = in.nextInt();
-                if(option == 1) ListaFuncionarios.get(i).setDiaw(ListaFuncionarios.get(i).getDiaw() + 1);
+                if(ListaFuncionarios.get(i).getHj() == 1) System.out.print("Ponto já registrado para este funcionário hoje.");
+                else
+                {
+                    System.out.print("O funcionário é Assalariado ou Comissionado, Trabalhou o dia de hoje? [1] para Sim, [0] para Não.\nSe sim um dia de trabalho será incrementado.");
+                    option = in.nextInt();
+                    if(option == 1) ListaFuncionarios.get(i).setHj(1);
+                }
             }
         }
 
@@ -289,6 +317,95 @@ public class Main {
         }
     }
 
+    static void rodarFphj(ArrayList<Funcionario> ListaFuncionarios, int dia)
+    {
+        System.out.print("Rodando a folha de pagamento para hoje...\n");
+        int i;
+        for(i = 0; i < ListaFuncionarios.size(); i++)
+        {
+            if(findDay(ListaFuncionarios.get(i).getPaymentdays(), dia))
+            {
+                System.out.printf("Funcionário a ser pago: %s\nTipo: %s\n", ListaFuncionarios.get(i).getNome(), ListaFuncionarios.get(i).getTipostr());
+                System.out.printf("Dias Trabalhados: %d\nSalário Mensal %.2f\n", ListaFuncionarios.get(i).getDiaw(), ListaFuncionarios.get(i).getSalario().getSalmen());
+                System.out.printf("Horas Trabalhadas: %.2f\nSalário Hora %.2f\n", ListaFuncionarios.get(i).getHorw(), ListaFuncionarios.get(i).getSalario().getSalhor());
+                Salario aux = ListaFuncionarios.get(i).getSalario();
+                aux.setSaltot( (ListaFuncionarios.get(i).getHorw() * aux.getSalhor()) +  ( ((double)ListaFuncionarios.get(i).getDiaw()/27) * aux.getSalmen()) + (aux.getVendas() * (aux.getComis()/100)));
+                System.out.printf("Salário Bruto = %.2f\n", aux.getSaltot());                                               ///CONSIDERANDO UM MES COM 27 DIAS UTEIS - 4 DOMINGOS.
+                System.out.printf("Taxas = %.2f\n", aux.getTaxas());
+                System.out.printf("Sindicato(2%%) =  %.2f\n", aux.getSaltot()*0.02);
+                aux.setSaltot(aux.getSaltot() - aux.getTaxas() - aux.getSaltot()*0.02);
+                System.out.printf("Salário Líquido = %.2f\n", aux.getSaltot());
+                aux.setTaxas(0);
+                aux.setVendas(0);
+                if(ListaFuncionarios.get(i).getTiponum() == 1)//RESETANDO ATRIBUTOS, CASO O FUNCIONARIO TENHA MUDADO DE TIPO
+                {
+                    ListaFuncionarios.get(i).getSalario().setSalmen(0);
+                    ListaFuncionarios.get(i).getSalario().setComis(0);
+                }
+                else if(ListaFuncionarios.get(i).getTiponum() == 2 || ListaFuncionarios.get(i).getTiponum() == 3)
+                {
+                    ListaFuncionarios.get(i).getSalario().setSalhor(0);
+                    if(ListaFuncionarios.get(i).getTiponum() == 2) ListaFuncionarios.get(i).getSalario().setComis(0);
+                }
+                ListaFuncionarios.get(i).setSalario(aux);
+                ListaFuncionarios.get(i).setHj(0);
+                ListaFuncionarios.get(i).setDiaw(0);
+                ListaFuncionarios.get(i).setHorw(0);
+            }
+        }
+    }
+
+
+    //static void undo()
+    //static void redo()
+
+    static void agendaPagamento(ArrayList<Funcionario> ListaFuncionarios)
+    {
+        System.out.print("Digite o ID do funcionário para mudar a agenda de pagamento: ");
+        int id, i, option;
+        id = in.nextInt();
+        i = findFunc(ListaFuncionarios, id);
+        System.out.print("Deseja realmente editar a agenda de pagamento do funcionário? 1 - [S] || 0 - [N].\n");
+        //printFunc(ListaFuncionarios, id);
+        option = in.nextInt();
+        //1- semanalmente(1, 8, 15, 22, 29) , 2- bi semanalmente(8, 22), 3- fim do mes(31)
+        int p1[] = {1, 8, 15, 22, 29};
+        int p2[] = {8, 22, 0, 0, 0};
+        int p3[] = {31, 0, 0, 0, 0};
+        int aux[];
+
+        aux = ListaFuncionarios.get(i).getPaymentdays();
+        int j;
+        for(j = 0; j < 5; j++) System.out.printf("%d ", aux[j]);
+        System.out.print("\n");
+
+        if(option == 1)
+        {
+            System.out.print("Qual agenda deseja?\n[1] - Semanalmente as segundas;\n[2] - Bi-semanalmente as segundas;\n[3] - Mensalmente no último dia do mês.\n");
+            option = in.nextInt();
+            if(option == 1)
+            {
+                System.out.print("Opção [1]\n");
+                ListaFuncionarios.get(i).setPaymentdays(p1);
+            }
+            else if(option == 2)
+            {
+                System.out.print("Opção [2]\n");
+                ListaFuncionarios.get(i).setPaymentdays(p2);
+
+            }
+            else if(option == 3)
+            {
+                System.out.print("Opção [3]\n");
+                ListaFuncionarios.get(i).setPaymentdays(p3);
+            }
+            aux = ListaFuncionarios.get(i).getPaymentdays();
+            for(j = 0; j < 5; j++) System.out.printf("%d ", aux[j]);
+            System.out.print("\n");
+        }
+    }
+
+
 
 
     private static void menu(int dia, ArrayList<Funcionario> ListaFuncionarios) {
@@ -298,13 +415,18 @@ public class Main {
             int dsem = dia % 7;
             if(dsem == 0) sem++;
 
-            if (dsem == 0) System.out.println(" - Domingo.\n");
-            else if (dsem == 1) System.out.println(dia + " - Segunda.\n");
-            else if (dsem == 2) System.out.println(dia + " - Terça.\n");
-            else if (dsem == 3) System.out.println(dia + " - Quarta.\n");
-            else if (dsem == 4) System.out.println(dia + " - Quinta.\n");
-            else if (dsem == 5) System.out.println(dia + " - Sexta.\n");
-            else if (dsem == 6) System.out.println(dia + " - Sábado.\n");
+            if (dsem == 0)
+            {
+                System.out.println(sem + " Semana | " + dia + " - Domingo.\n");
+                menu(dia + 1, ListaFuncionarios);
+            }
+
+            else if (dsem == 1) System.out.println(sem + " Semana | " + dia + " - Segunda.\n");
+            else if (dsem == 2) System.out.println(sem + " Semana | " + dia + " - Terça.\n");
+            else if (dsem == 3) System.out.println(sem + " Semana | " + dia + " - Quarta.\n");
+            else if (dsem == 4) System.out.println(sem + " Semana | " + dia + " - Quinta.\n");
+            else if (dsem == 5) System.out.println(sem + " Semana | " + dia + " - Sexta.\n");
+            else if (dsem == 6) System.out.println(sem + " Semana | " + dia + " - Sábado.\n");
 
             System.out.print("Digite:\n");
             System.out.print("[0]  - Sair;\n");
@@ -318,7 +440,7 @@ public class Main {
             System.out.print("[8]  - Undo/Redo;\n");
             System.out.print("[9]  - Agenda de Pagamento;\n");
             System.out.print("[10] - Criação de Novas Agendas de Pagamento;\n");
-            System.out.print("[11] - Encerrar Dia de Trabalho;\n");
+            System.out.print("[11] - Listar um funcionário específico.\n");
 
             option = in.nextInt();
             //in.nextLine();
@@ -333,42 +455,38 @@ public class Main {
                 System.out.print("Opção [Adicionar Empregado] selecionada!\n");
                 addFuncionario(ListaFuncionarios);
                 ListarFuncionarios(ListaFuncionarios);
-
             }
             else if (option == 2)
             {
                 System.out.print("Opção [Remover Empregado] selecionada!\n");
                 delFuncionario(ListaFuncionarios);
-
             }
             else if (option == 3)
             {
                 System.out.print("Opção [Lançar um Cartão de Ponto] selecionada!\n");
                 lancarPonto(ListaFuncionarios);
-
             }
             else if (option == 4)
             {
                 System.out.print("Opção [Lançar um Resultado Venda] selecionada!\n");
                 lancarVenda(ListaFuncionarios);
-
             }
             else if (option == 5)
             {
                 System.out.print("Opção [Lançar uma taxa de serviço] selecionada!\n");
                 lancarTaxas(ListaFuncionarios);
-
             }
             else if (option == 6)
             {
                 System.out.print("Opção [Alterar detalhes de um empregado] selecionada!\n");
                 editFunc(ListaFuncionarios);
-
             }
             else if (option == 7)
             {
-                System.out.print("Opção [Rodar a folha de pagamento para hoje] selecionada!\n");
-
+                System.out.print("Opção [Rodar a folha de pagamento para hoje] selecionada (finalizar expediente)!\n");
+                zerarContabilizar(ListaFuncionarios);
+                rodarFphj(ListaFuncionarios, dia);
+                menu(dia + 1, ListaFuncionarios);
             }
             else if (option == 8)
             {
@@ -378,20 +496,20 @@ public class Main {
             else if (option == 9)
             {
                 System.out.print("Opção [Agenda de Pagamento] selecionada!\n");
-
+                agendaPagamento(ListaFuncionarios);
             }
             else if (option == 10)
             {
                 System.out.print("Opção [Criação de Novas Agendas de Pagamento] selecionada!\n");
 
             }
-            else if (option == 11)
+            /*else if (option == 11)
             {
                 System.out.print("Opção [Encerrar Dia de Trabalho] selecionada!\n");
                 menu(dia + 1, ListaFuncionarios);
 
-            }
-            else if(option == 12) printFunc(ListaFuncionarios, in.nextInt());
+            }*/
+            else if(option == 11) printFunc(ListaFuncionarios, in.nextInt());
             else System.out.print("Opção inválida!\n");
 
             System.out.print("Deseja fazer outra alteração? Se sim, digite [1], se não digite [0](Sair).\n");
@@ -412,6 +530,6 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<Funcionario> ListaFuncionarios = new ArrayList<Funcionario>();
-        menu(1, ListaFuncionarios);
+        menu(28, ListaFuncionarios);
     }
 }

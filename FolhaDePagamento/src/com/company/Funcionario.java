@@ -11,7 +11,11 @@ public class Funcionario
     private String tipostr;
     private int diaw = 0;
     private double horw = 0;
+    private double hj = 0;
+    private int paymentype; //1- semanalmente(1, 8, 15, 22, 29) , 2- bi semanalmente(8, 22), 3- fim do mes(31)
+    private int[] paymentdays = new int[5];
     private Salario salario;
+
 
     public static int getGid() { return gid; }
     public static void setGid(int gid) { Funcionario.gid = gid; }
@@ -39,4 +43,13 @@ public class Funcionario
 
     public double getHorw() { return horw; }
     public void setHorw(double horw) { this.horw = horw; }
+
+    public double getHj() { return hj; }
+    public void setHj(double hj) { this.hj = hj; }
+
+    public int getPaymentype() { return paymentype; }
+    public void setPaymentype(int paymentype) { this.paymentype = paymentype; }
+
+    public int[] getPaymentdays() { return paymentdays; }
+    public void setPaymentdays(int[] paymentdays) { this.paymentdays = paymentdays; }
 }
