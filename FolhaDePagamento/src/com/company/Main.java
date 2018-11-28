@@ -6,9 +6,21 @@ public class Main {
     static Scanner in = new Scanner(System.in);
     static int sem = 1;
     //static String[] mes = new String[31];
-    public class Lista { ArrayList<Funcionario> Lista; }
+    static int[] arrop = new int[1000];
+    static int index = 0;
+
+
+    public static class Lista
+    {
+        ArrayList<Funcionario> Lista;
+
+        public ArrayList<Funcionario> getLista() { return Lista; }
+        public void setLista(ArrayList<Funcionario> lista) { Lista = lista; }
+    }
+
     public static Stack<Lista> pilhaundo = new Stack<Lista>();
     public static Stack<Lista> pilharedo = new Stack<Lista>();
+//public static Stack<int> pilhaop = new Stack<int>();
 
 
 
@@ -91,11 +103,18 @@ public class Main {
 
     static void addFuncionario(ArrayList<Funcionario> ListaFuncionarios) {
         int option;
+
         System.out.println("Deseja Continuar? [1] Para sim, [0] para não.\n");
+
         option = in.nextInt();
         in.nextLine();
         if (option != 1) return;
         else {
+            Lista aux =  new Lista();
+            aux.setLista(ListaFuncionarios);
+            pilhaundo.push(aux);
+            arrop[index] = 1;
+            index++;
             Funcionario novo = new Funcionario();
             Salario novos = new Salario();
             novo.setGid(novo.getGid() + 1);
@@ -160,6 +179,11 @@ public class Main {
             option = in.nextInt();
             if(option == 1)
             {
+                Lista aux1 =  new Lista();
+                aux1.setLista(ListaFuncionarios);
+                pilhaundo.push(aux1);
+                arrop[index] = 2;
+                index++;
                 aux = ListaFuncionarios.remove(i);
                 System.out.print("Funcionário removido com sucesso!\n");
                 return aux;
@@ -179,6 +203,11 @@ public class Main {
         option = in.nextInt();
         if(option == 1)
         {
+            Lista aux =  new Lista();
+            aux.setLista(ListaFuncionarios);
+            pilhaundo.push(aux);
+            arrop[index] = 3;
+            index++;
             if(ListaFuncionarios.get(i).getTiponum() == 1)
             {
                 System.out.print("O funcionário é Horista, digite a quantidade de horas trabalhadas: ");
@@ -211,6 +240,11 @@ public class Main {
         option = in.nextInt();
         if(option == 1)
         {
+            Lista aux1 =  new Lista();
+            aux1.setLista(ListaFuncionarios);
+            pilhaundo.push(aux1);
+            arrop[index] = 4;
+            index++;
             if(ListaFuncionarios.get(i).getTiponum() == 3)
             {
                 System.out.print("Funcionário comissionado!\nDigite o valor da venda: ");
@@ -235,6 +269,11 @@ public class Main {
         option = in.nextInt();
         if(option == 1)
         {
+            Lista aux1 =  new Lista();
+            aux1.setLista(ListaFuncionarios);
+            pilhaundo.push(aux1);
+            arrop[index] = 5;
+            index++;
             System.out.print("Digite o valor da taxa de serviço: ");
             Salario aux = ListaFuncionarios.get(i).getSalario();
             aux.setTaxas(aux.getTaxas() + in.nextDouble());
@@ -255,6 +294,11 @@ public class Main {
         option = in.nextInt();
         if(option == 1)
         {
+            Lista aux1 =  new Lista();
+            aux1.setLista(ListaFuncionarios);
+            pilhaundo.push(aux1);
+            arrop[index] = 6;
+            index++;
             System.out.print("Deseja editar o nome do funcionário? 1 - [S] || 0 - [N].\n");
             option = in.nextInt();
             in.nextLine();
@@ -320,6 +364,11 @@ public class Main {
     static void rodarFphj(ArrayList<Funcionario> ListaFuncionarios, int dia)
     {
         System.out.print("Rodando a folha de pagamento para hoje...\n");
+        Lista aux1 =  new Lista();
+        aux1.setLista(ListaFuncionarios);
+        pilhaundo.push(aux1);
+        arrop[index] = 7;
+        index++;
         int i;
         for(i = 0; i < ListaFuncionarios.size(); i++)
         {
@@ -356,8 +405,49 @@ public class Main {
     }
 
 
-    //static void undo()
-    //static void redo()
+    static void undoRedo(ArrayList<Funcionario> ListaFuncionarios, int dia)
+    {
+        System.out.print("Digite [1] para Undo | [2] para Redo.\n");
+        int option, op;
+        Lista aux =  new Lista();
+        option = in.nextInt();
+
+        if(option == 1)//undo
+        {
+            System.out.print("Redo\n");
+            if( !pilhaundo.isEmpty() )
+            {
+                op = arrop[index];
+                //if (index > 0) index--;
+                //else System.out.print("INDEX = 0\n");
+                aux.setLista(ListaFuncionarios);
+                pilharedo.push(aux);
+                aux = pilhaundo.pop();
+                ArrayList<Funcionario> Listaaux = aux.getLista();
+                //ListaFuncionarios = (ArrayList<Funcionario>) Listaaux.clone();
+                if(op == 7) menu(dia-1, Listaaux);
+                else menu(dia, ListaFuncionarios);
+            }
+            else System.out.print("Underflow\n");
+        }
+        else if(option == 2)//redo
+        {
+            System.out.print("Redo\n");
+            if( !pilharedo.isEmpty() ) {
+                op = arrop[index];
+                //if (index > 0) index;
+                aux.setLista(ListaFuncionarios);
+                pilhaundo.push(aux);
+                aux = pilharedo.pop();
+                ArrayList<Funcionario> Listaaux = aux.getLista();
+                //ListaFuncionarios = (ArrayList<Funcionario>) Listaaux.clone();
+                if (op == 7) menu(dia + 1, Listaaux);
+                else menu(dia, ListaFuncionarios);
+            }
+            else System.out.print("Underflow\n");
+        }
+    }
+
 
     static void agendaPagamento(ArrayList<Funcionario> ListaFuncionarios)
     {
@@ -381,6 +471,11 @@ public class Main {
 
         if(option == 1)
         {
+            Lista aux1 =  new Lista();
+            aux1.setLista(ListaFuncionarios);
+            pilhaundo.push(aux1);
+            arrop[index] = 9;
+            index++;
             System.out.print("Qual agenda deseja?\n[1] - Semanalmente as segundas;\n[2] - Bi-semanalmente as segundas;\n[3] - Mensalmente no último dia do mês.\n");
             option = in.nextInt();
             if(option == 1)
@@ -491,6 +586,7 @@ public class Main {
             else if (option == 8)
             {
                 System.out.print("Opção [Undo/Redo] selecionada!\n");
+                undoRedo(ListaFuncionarios, dia);
 
             }
             else if (option == 9)
@@ -530,6 +626,6 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<Funcionario> ListaFuncionarios = new ArrayList<Funcionario>();
-        menu(28, ListaFuncionarios);
+        menu(1, ListaFuncionarios);
     }
 }
