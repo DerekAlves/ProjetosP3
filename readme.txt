@@ -4,7 +4,19 @@ ECOM015-T - Projeto de Software.
 Derek Nielsen Araújo Alves - dnaa@ic.ufal.br;
 Iniciado em 21 de novembro de 2018.
 
-Funcionalidades
+Funcionalidades do sistema de produtividade academica
+
+[0]  - Sair;                                  [X]
+[1]  - Adicionar colaborador ao laboratório;  [ ]
+[2]  - Adicionar projeto ao laboratório;      [ ]
+[3]  - Editar projeto do laboratório;         [ ]
+[4]  - Editar projeto do laboratório;         [ ]
+[5]  - Consulta colaborador;                  [ ]
+[6]  - Consulta projeto;                      [ ]
+[7]  - Relatório de produção Acadêmica;       [ ]
+[8]  - Cadastrar novo administrador.          [ ]
+
+Funcionalidades da folha de pagamentos
 
 [0]  - Sair; [X]
 [1]  - Adicionar Empregado; [X]
