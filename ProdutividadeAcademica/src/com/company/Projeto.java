@@ -17,8 +17,8 @@ public class Projeto
     private double valfinan;
     private String objetivo;
     private String descricao;
-    private ArrayList<Colaborador> participantes;
-    private ArrayList<Publicacao> publicacoes;
+    private ArrayList<Colaborador> participantes = new ArrayList<Colaborador>();
+    private ArrayList<Publicacao> publicacoes =  new ArrayList<Publicacao>();
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
@@ -49,4 +49,5 @@ public class Projeto
 
     public ArrayList<Publicacao> getPublicacoes() { return publicacoes; }
     public void setPublicacoes(ArrayList<Publicacao> publicacoes) { this.publicacoes = publicacoes; }
+
 }

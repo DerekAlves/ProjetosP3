@@ -3,6 +3,8 @@ package com.company;
 //colaboradores: alunos de graduação, alunos
 //de mestrado, alunos de doutorado, professores e pesquisadores.
 
+import java.util.ArrayList;
+
 public class Colaborador
 {
     static int gid = 0;
@@ -12,6 +14,7 @@ public class Colaborador
     private int tipo;//1 - alunog, 2 - alunom, 3 - alunod, 4 - professores, 5 - pesquisadores.
     private String tipostr;
     private boolean partdeprojeto = false;
+    private ArrayList<Projeto> projetos;
 
     public static int getGid() { return gid; }
     public static void setGid(int gid) { Colaborador.gid = gid; }

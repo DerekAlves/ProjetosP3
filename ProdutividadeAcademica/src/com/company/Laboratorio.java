@@ -9,10 +9,11 @@ import java.util.ArrayList;
 //e. Número total de projetos
 //f. Número de produção acadêmica por tipo de produção
 
+
 public class Laboratorio
 {
-    private ArrayList<Colaborador> participantes;
-    private ArrayList<Projeto> projetos;
+    private ArrayList<Colaborador> participantes = new ArrayList<Colaborador>();
+    private ArrayList<Projeto> projetos =  new ArrayList<Projeto>();
     private int pe;
     private int pa;
     private int pc;
