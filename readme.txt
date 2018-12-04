@@ -7,14 +7,13 @@ Iniciado em 21 de novembro de 2018.
 Funcionalidades do sistema de produtividade academica
 
 [0]  - Sair;                                  [X]
-[1]  - Adicionar colaborador ao laboratório;  [ ]
-[2]  - Adicionar projeto ao laboratório;      [ ]
+[1]  - Adicionar colaborador ao laboratório;  [X]
+[2]  - Adicionar projeto ao laboratório;      [X]
 [3]  - Editar projeto do laboratório;         [ ]
-[4]  - Editar projeto do laboratório;         [ ]
-[5]  - Consulta colaborador;                  [ ]
-[6]  - Consulta projeto;                      [ ]
-[7]  - Relatório de produção Acadêmica;       [ ]
-[8]  - Cadastrar novo administrador.          [ ]
+[4]  - Consulta colaborador;                  [ ]
+[5]  - Consulta projeto;                      [ ]
+[6]  - Relatório de produção Acadêmica;       [ ]
+[7]  - Cadastrar novo administrador.          [X]
 
 Funcionalidades da folha de pagamentos
 
