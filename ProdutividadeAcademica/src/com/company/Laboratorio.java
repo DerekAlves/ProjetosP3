@@ -14,11 +14,11 @@ public class Laboratorio
 {
     private ArrayList<Colaborador> participantes = new ArrayList<Colaborador>();
     private ArrayList<Projeto> projetos =  new ArrayList<Projeto>();
-    private int pe;
-    private int pa;
-    private int pc;
-    private int pap;
-    private int pao;
+    private int pe = 0;
+    private int pa = 0;
+    private int pc = 0;
+    private int pap = 0;
+    private int pao = 0;
 
     public ArrayList<Colaborador> getParticipantes() { return participantes; }
     public void setParticipantes(ArrayList<Colaborador> participantes) { this.participantes = participantes; }

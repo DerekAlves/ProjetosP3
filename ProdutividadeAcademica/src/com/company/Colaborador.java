@@ -15,6 +15,7 @@ public class Colaborador
     private String tipostr;
     private boolean partdeprojeto = false;
     private ArrayList<Projeto> projetos;
+    private ArrayList<Publicacao> publicacao;
 
     public static int getGid() { return gid; }
     public static void setGid(int gid) { Colaborador.gid = gid; }
@@ -33,6 +34,12 @@ public class Colaborador
 
     public String getTipostr() { return tipostr; }
     public void setTipostr(String tipostr) { this.tipostr = tipostr; }
+
+    public ArrayList<Projeto> getProjetos() { return projetos; }
+    public void setProjetos(ArrayList<Projeto> projetos) { this.projetos = projetos; }
+
+    public ArrayList<Publicacao> getPublicacao() { return publicacao; }
+    public void setPublicacao(ArrayList<Publicacao> publicacao) { this.publicacao = publicacao; }
 
     public boolean isPartdeprojeto() { return partdeprojeto; }
     public void setPartdeprojeto(boolean partdeprojeto) { this.partdeprojeto = partdeprojeto; }

@@ -7,6 +7,18 @@ public class Main
 {
     static Scanner in = new Scanner(System.in);
 
+    private static void printdata(Data data) { System.out.printf("%d / %d / %d\n", data.getDia(), data.getMes(), data.getAno()); }
+
+    private static void listarpa(ArrayList<Publicacao> pub)
+    {
+        int i;
+        System.out.print("Listando publicações...\n");
+        for(i = 0; i < pub.size(); i++)
+            System.out.printf("Publicação: %s\n", pub.get(i).getTitulo());
+    }
+
+
+
     private static int findcollab(ArrayList<Colaborador> collabs, int id)
     {
         int i;
@@ -63,6 +75,7 @@ public class Main
     {
         System.out.print("Criando novo projeto...\n");
         Projeto pjt = new Projeto();
+        lab.setPe(lab.getPe() + 1);
         System.out.print("Digite o Título do projeto: ");
         pjt.setTitulo(in.nextLine());
         pjt.setStatus(1);
@@ -71,7 +84,13 @@ public class Main
         ini.setDia(in.nextInt());
         ini.setMes(in.nextInt());
         ini.setAno(in.nextInt());
+        System.out.print("Digite a data de termino do projeto (DD MM AAAA): ");
+        Data fim = new Data();
+        fim.setDia(in.nextInt());
+        fim.setMes(in.nextInt());
+        fim.setAno(in.nextInt());
         in.nextLine();
+        pjt.setTermino(fim);
         pjt.setInicio(ini);
         System.out.print("Digite o nome da agência financiadora: ");
         pjt.setAgfinan(in.nextLine());
@@ -119,7 +138,187 @@ public class Main
             else System.out.print("Opção Inválida, digite novamente: ");
         }
         System.out.print("Novo projeto criado com sucesso!\n");
+        lab.getProjetos().add(pjt);
     }
+
+    private static void editprojeto(Laboratorio lab)
+    {
+        System.out.print("Deseja listar todos os projetos? [1] -  Sim | [2] - Não: ");
+        if(in.nextInt() == 1) listarpjts(lab.getProjetos());
+        in.nextLine();
+        //STATUS//1 - elaboração, 2 - em andamento, 3 - concluido.
+        System.out.print("Digite o título do projeto a ser editado: ");
+        int i = findpjts(lab.getProjetos(), in.nextLine());
+        if(i != -1)
+        {
+            System.out.print("O que deseja editar no projeto?\n");
+            System.out.print("[1] Para alocar participantes;\n");
+            System.out.print("[2] Para alterar status;\n");
+            System.out.print("[3] Adicionar publicação;\n");
+            System.out.print("[4] Adicionar orientação;\n");
+
+            int option =  in.nextInt();
+            in.nextLine();
+            if(option == 1)
+            {
+                System.out.print("Opção - [1] Para alocar participantes;\n");
+                if(lab.getProjetos().get(i).getStatus() != 2)
+                {
+                    System.out.print("Mude o status do projeto para adicionar colaboradores!\n");
+                    System.out.print("Deseja mudar agora? [1] -  Sim | [2] - Não: ");
+                    if(in.nextInt() == 1)
+                    {
+                        in.nextLine();
+                        lab.getProjetos().get(i).setStatus(2);
+                        System.out.print("Status setado para 2 - Em andamento!\n");
+                        lab.setPe(lab.getPe() - 1);
+                        lab.setPa(lab.getPa() + 1);
+                    }
+                }
+                if(lab.getProjetos().get(i).getStatus() == 2)
+                {
+                    System.out.print("Deseja listar os colaboradores? [1] - Sim | [2] - Não: ");
+                    if(in.nextInt() == 1) listarcollabs(lab.getParticipantes());
+                    System.out.print("Digite o ID do colaborador a ser alocado; ");
+                    int j = findcollab(lab.getParticipantes(), in.nextInt());
+                    if(lab.getParticipantes().get(j).isPartdeprojeto() && lab.getParticipantes().get(j).getTipo() != 4) System.out.print("Colaborador já está em um projeto! Ele não será adicionado!\n");
+                    else
+                    {
+                        lab.getProjetos().get(i).getParticipantes().add(lab.getParticipantes().get(j));///TESTAR
+                        System.out.print("Colaborador adicionado com sucesso! ");
+                        lab.getParticipantes().get(j).setPartdeprojeto(true);
+                    }
+                }
+
+            }
+            else if(option == 2)
+            {
+                System.out.print("Opção - [2] Para alterar status;\n");
+                if(lab.getProjetos().get(i).getStatus() == 1)
+                {
+                    System.out.print("Status Elaboração! Deseja mudar para Em andamento? [1] - Sim | [2] - Não: ");
+                    if(in.nextInt() == 1)
+                    {
+                        lab.getProjetos().get(i).setStatus(2);
+                        System.out.print("Status alterado com sucesso!\n");
+                        lab.setPe(lab.getPe() - 1);
+                        lab.setPa(lab.getPa() + 1);
+                    }
+                    else System.out.print("Status não alterado!\n");
+                }
+                if(lab.getProjetos().get(i).getStatus() == 2)
+                {
+                    System.out.print("Status Em andamento! Deseja mudar para Concluído? [1] - Sim | [2] - Não: ");
+                    if(in.nextInt() == 1)
+                    {
+                        lab.getProjetos().get(i).setStatus(3);
+                        for (Colaborador collab : lab.getParticipantes()) collab.setPartdeprojeto(false);
+                        System.out.print("Status alterado com sucesso!\n");
+                        lab.setPa(lab.getPa() - 1);
+                        lab.setPc(lab.getPc() + 1);
+                    }
+                    else System.out.print("Status não alterado!\n");
+                }
+            }
+            else if(option == 3)
+            {
+                System.out.print("Opção - [3] Adicionar publicação;\n");
+                if(lab.getProjetos().get(i).getStatus() != 2) System.out.print("Mude o status para em andamento para adicionar uma publicação!\n");
+                else
+                {
+                    Publicacao pub = new Publicacao();
+                    System.out.print("Digite o título da publicação: ");
+                    pub.setTitulo(in.nextLine());
+                    System.out.print("Digite o nome da conferência: ");
+                    pub.setNomeconf(in.nextLine());
+                    System.out.print("Digite a data da publicação (DD MM AAAA): ");
+                    Data aux = new Data();
+                    aux.setDia(in.nextInt());
+                    aux.setMes(in.nextInt());
+                    aux.setAno(in.nextInt());
+                    pub.setPublicacao(aux);
+                    in.nextLine();
+                    System.out.printf("Projeto de pesquisa associado: %s\n", lab.getProjetos().get(i).getTitulo());
+                    pub.setPpassociado(lab.getProjetos().get(i).getTitulo());
+                    lab.getProjetos().get(i).getPublicacoes().add(pub);
+                    lab.setPap(lab.getPap() + 1);
+                    System.out.print("Publicação adicionada com sucesso!\n");
+                }
+
+            }
+            else if(option == 4)
+            {
+                System.out.print("Opção - [4] Adicionar orientação;\n");
+                System.out.print("Falta finalizar, nenhuma alteração foi feita!\n");
+            }
+        }
+        else System.out.print("Tente novamente!\n");
+    }
+
+    private static void consultacollab(Laboratorio lab)
+    {
+        System.out.print("Deseja listar todos os colaboradores? [1] - Sim | [2] -  Não: ");
+        if(in.nextInt() == 1) listarcollabs(lab.getParticipantes());
+        in.nextLine();
+        System.out.print("Digite o ID do colaborador a ser consultado: ");
+        int i = findcollab(lab.getParticipantes(), in.nextInt());
+        System.out.printf("Colaborador: %s - ID %4d - Tipo %s\n", lab.getParticipantes().get(i).getNome(), lab.getParticipantes().get(i).getId(), lab.getParticipantes().get(i).getTipostr());
+        System.out.printf("Email: %s\n", lab.getParticipantes().get(i).getEmail());
+        System.out.printf("Tipo - %d - %s\n", lab.getParticipantes().get(i).getTipo(), lab.getParticipantes().get(i).getTipostr());
+
+
+        //LISTAR PJTS
+
+
+    }
+
+    private static void consultapjt(Laboratorio lab)
+    {
+        System.out.print("Deseja listar todos os projetos? [1] - Sim | [2] -  Não: ");
+        if(in.nextInt() == 1) listarpjts(lab.getProjetos());
+        in.nextLine();
+        System.out.print("Digite o nome do projeto a ser consultado: ");
+        int i = findpjts(lab.getProjetos(), in.nextLine());
+        System.out.printf("Projeto: %s\n", lab.getProjetos().get(i).getTitulo());
+        if(lab.getProjetos().get(i).getStatus() == 1) System.out.print("Status: Em elaboração!\n");
+        else if(lab.getProjetos().get(i).getStatus() == 2) System.out.print("Status: Em andamento!\n");
+        else if(lab.getProjetos().get(i).getStatus() == 3) System.out.print("Status: Concluído!\n");
+        System.out.print("Data de Inicio: ");
+        printdata(lab.getProjetos().get(i).getInicio());
+        System.out.print("Data de Termino: ");
+        printdata(lab.getProjetos().get(i).getTermino());
+        System.out.printf("Agencia financiadora: %s | Valor financiado %.2f\n", lab.getProjetos().get(i).getAgfinan(), lab.getProjetos().get(i).getValfinan());
+        System.out.printf("Objetivo: %s\nDescrição: %s\n", lab.getProjetos().get(i).getObjetivo(), lab.getProjetos().get(i).getDescricao());
+        //System.out.print("Listando colaboradores...\n");
+        listarcollabs(lab.getProjetos().get(i).getParticipantes());
+        listarpa(lab.getProjetos().get(i).getPublicacoes());
+
+        //LISTAR PA ORD D DATA
+    }
+
+
+    private static void listarpjts(ArrayList<Projeto> pjts)
+    {
+        int i;
+        System.out.print("Listando projetos...\n");
+        for(i = 0; i < pjts.size(); i++)
+            System.out.printf("%s\n", pjts.get(i).getTitulo());
+    }
+
+    private static int findpjts(ArrayList<Projeto> pjts, String titulo)
+    {
+        int i;
+        //System.out.print("Listando administradores...\n");
+        for(i = 0; i < pjts.size(); i++)
+            if(titulo.equals(pjts.get(i).getTitulo()))
+            {
+                System.out.print("Projeto encontrado!\n");
+                return i;
+            }
+        System.out.print("Projeto não encontrado!\n");
+        return -1;//nao achou.!!
+    }
+
 
     private static void criaradm(ArrayList<Adm> adms)
     {
@@ -159,6 +358,26 @@ public class Main
         System.out.print("Usuário não encontrado!\n");
         return -1;//nao achou.!!
     }
+
+    private static void relatorio(Laboratorio lab)
+    {
+        //a. Número de colaboradores
+        //b. Número de projetos em elaboração
+        //c. Número de projetos em andamento
+        //d. Número de projetos concluídos
+        //e. Número total de projetos
+        //f. Número de produção acadêmica por tipo de produção
+
+        System.out.print("Gerando Relatório...\n");
+        System.out.printf("Número de colaboradores          = %4d\n", lab.getParticipantes().size());
+        System.out.printf("Número de projetos em elaboração = %4d\n", lab.getPe());
+        System.out.printf("Número de projetos em andamento  = %4d\n", lab.getPa());
+        System.out.printf("Número de projetos concluídos    = %4d\n", lab.getPc());
+        System.out.printf("Número total de projetos         = %4d\n", lab.getProjetos().size());
+        System.out.printf("Publicações                      = %4d\n", lab.getPap());
+        System.out.printf("Orientações                      = %4d\n", lab.getPao());
+    }
+
 
 
 
@@ -204,7 +423,7 @@ public class Main
             System.out.print("[0]  - Sair;\n");
             System.out.print("[1]  - Adicionar colaborador ao laboratório;\n");
             System.out.print("[2]  - Adicionar projeto ao laboratório;\n");
-            System.out.print("[4]  - Editar projeto do laboratório;\n");
+            System.out.print("[3]  - Editar projeto do laboratório;\n");
             System.out.print("[4]  - Consulta colaborador;\n");
             System.out.print("[5]  - Consulta projeto;\n");
             System.out.print("[6]  - Relatório de produção Acadêmica;\n");
@@ -215,38 +434,42 @@ public class Main
 
             if(option == 0)
             {
-                System.out.print("Opção [0] escolhida - Sair!\n");
+                System.out.print("Opção [0] escolhida - Sair!\n");//v
                 exit = true;
             }
             else if(option == 1)
             {
-                System.out.print("Opção [1] escolhida - Adicionar colaborador ao laboratório!\n");
+                System.out.print("Opção [1] escolhida - Adicionar colaborador ao laboratório!\n");//v
                 criarcollab(laboratorio, 0);
             }
             else if(option == 2)
             {
-                System.out.print("Opção [2] escolhida - Adicionar projeto ao laboratório!\n");
+                System.out.print("Opção [2] escolhida - Adicionar projeto ao laboratório!\n");//v
                 criarprojeto(laboratorio);
             }
             else if(option == 3)
             {
-                System.out.print("Opção [4] escolhida - Editar projeto do laboratório!\n");
+                System.out.print("Opção [3] escolhida - Editar projeto do laboratório!\n");//
+                editprojeto(laboratorio);
             }
             else if(option == 4)
             {
-                System.out.print("Opção [5] escolhida - Consulta colaborador!\n");
+                System.out.print("Opção [4] escolhida - Consulta colaborador!\n");//
+                consultacollab(laboratorio);
             }
             else if(option == 5)
             {
-                System.out.print("Opção [6] escolhida - Consulta projeto!\n");
+                System.out.print("Opção [5] escolhida - Consulta projeto!\n");//
+                consultapjt(laboratorio);
             }
             else if(option == 6)
             {
-                System.out.print("Opção [7] escolhida - Relatório de produção Acadêmica!\n");
+                System.out.print("Opção [6] escolhida - Relatório de produção Acadêmica!\n");//
+                relatorio(laboratorio);
             }
             else if(option == 7)
             {
-                System.out.print("Opção [8] escolhida - Cadastrar novo administrador!\n");
+                System.out.print("Opção [7] escolhida - Cadastrar novo administrador!\n");//v
                 criaradm(adms);
             }
         }

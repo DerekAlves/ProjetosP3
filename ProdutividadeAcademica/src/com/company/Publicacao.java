@@ -8,7 +8,7 @@ public class Publicacao
     private String titulo;
     private String nomeconf;
     private Data publicacao;
-    private Projeto ppassociado;
+    private String ppassociado;
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
@@ -19,6 +19,6 @@ public class Publicacao
     public Data getPublicacao() { return publicacao; }
     public void setPublicacao(Data publicacao) { this.publicacao = publicacao; }
 
-    public Projeto getPpassociado() { return ppassociado; }
-    public void setPpassociado(Projeto ppassociado) { this.ppassociado = ppassociado; }
+    public String getPpassociado() { return ppassociado; }
+    public void setPpassociado(String ppassociado) { this.ppassociado = ppassociado; }
 }
