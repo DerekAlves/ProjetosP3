@@ -9,11 +9,13 @@ Funcionalidades do sistema de produtividade academica
 [0]  - Sair;                                  [X]
 [1]  - Adicionar colaborador ao laboratório;  [X]
 [2]  - Adicionar projeto ao laboratório;      [X]
-[3]  - Editar projeto do laboratório;         [ ]
-[4]  - Consulta colaborador;                  [ ]
-[5]  - Consulta projeto;                      [ ]
-[6]  - Relatório de produção Acadêmica;       [ ]
+[3]  - Editar projeto do laboratório;         [X] (Em partes, faltou incluir a funcionalidade para orientações).
+[4]  - Consulta colaborador;                  [X] (Em partes, faltaram as publicações/orientações ordenadas).
+[5]  - Consulta projeto;                      [X] (Em partes, faltou a ordenação de publicações/orientações).
+[6]  - Relatório de produção Acadêmica;       [X] (Em partes, faltou o número de orientações).
 [7]  - Cadastrar novo administrador.          [X]
+
+Obs: A funcionalidade 3 engloba os item 1(A e B) e o item 2.
 
 Funcionalidades da folha de pagamentos
 
@@ -25,6 +27,6 @@ Funcionalidades da folha de pagamentos
 [5]  - Lançar uma taxa de serviço; [X]
 [6]  - Alterar detalhes de um empregado; [X]
 [7]  - Rodar a folha de pagamento para hoje; [X]
-[8]  - Undo/Redo;\n"); [X]
+[8]  - Undo/Redo; [X]
 [9]  - Agenda de Pagamento; [X]
 [10] - Criação de Novas Agendas de Pagamento; [ ]
