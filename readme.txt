@@ -4,6 +4,18 @@ ECOM015-T - Projeto de Software.
 Derek Nielsen Araújo Alves - dnaa@ic.ufal.br;
 Iniciado em 21 de novembro de 2018.
 
+Funcionalidades do iFace
+
+[0] - Sair;                                               [X]
+[1] - Criação de Conta;                                   [X]
+[2] - Criação/Edição de Perfil;                           [X]
+[3] - Adição de Amigos;                                   [X]
+[4] - Envio de Mensagens;                                 [X]
+[5] - Criação de Comunidades;                             [X]
+[6] - Adição de membros;                                  [X]
+[7] - Recuperar Informações sobre um determinado Usuário; [X]
+[8] - Remoção de Conta;                                   [X] ( Não testei 100%! )
+
 Funcionalidades do sistema de produtividade academica
 
 [0]  - Sair;                                  [X]
