@@ -50,8 +50,9 @@ public class Main
         System.out.print("Usuário adicionado com sucesso!\n");
     }
 
-    private static void editconta(Usuario user)
+    private static void editconta(Usuario user, Rede iface)
     {
+        String bef = user.getUser();
         System.out.printf("Editando a conta de: %s...\n", user.getUser());
         System.out.print("Deseja mesmo editar? [1] - Sim | [2] - Não: ");
         if(in.nextInt() == 1)
@@ -82,6 +83,8 @@ public class Main
             else System.out.print("Não editado\n");
         }
         else System.out.print("Edição cancelada!\n");
+
+        attatr(iface, user, bef);
         System.out.print("Fim da edição!\n");
     }
 
@@ -270,6 +273,116 @@ public class Main
         }
     }
 
+    private static void removeacc(Rede iface, Usuario remover)
+    {
+        System.out.printf("Removendo a conta de: %s...\n", remover.getLogin());
+        iface.getUsers().remove(remover);
+        int i, j;
+        for(i = 0; i < iface.getUsers().size(); i++)//remover mensagens
+        {
+            for (j = 0; j < iface.getUsers().get(i).getMsg().size(); j++)
+            {
+                if(remover.getUser().equals(iface.getUsers().get(i).getMsg().get(j).getUser() ) )
+                    iface.getUsers().get(i).getMsg().remove(iface.getUsers().get(i).getMsg().get(j));
+            }
+        }
+
+        for(i = 0; i < iface.getUsers().size(); i++)//remover amizades
+        {
+            for (j = 0; j < iface.getUsers().get(i).getAmigos().size(); j++)
+            {
+                if(remover.getUser().equals(iface.getUsers().get(i).getAmigos().get(j) ) )
+                    iface.getUsers().get(i).getAmigos().remove(iface.getUsers().get(i).getAmigos().get(j));
+            }
+        }
+
+        for(i = 0; i < iface.getUsers().size(); i++)//remover solicitações
+        {
+            for (j = 0; j < iface.getUsers().get(i).getSolicitacoes().size(); j++)
+            {
+                if(remover.getUser().equals(iface.getUsers().get(i).getSolicitacoes().get(j) ) )
+                    iface.getUsers().get(i).getSolicitacoes().remove(iface.getUsers().get(i).getSolicitacoes().get(j));
+            }
+        }
+
+        for(i = 0; i < iface.getComunidades().size(); i++)//remover da comunidade e por adm se necessário
+        {
+            if(remover.getUser().equals(iface.getComunidades().get(i).getAdm()))
+            {
+                for(j = 0; j < iface.getComunidades().get(i).getMembros().size(); j++)
+                {
+                    if( !(remover.getUser().equals(iface.getComunidades().get(i).getMembros().get(j).getUser() ) ) )
+                    {
+                        iface.getComunidades().get(i).setAdm(iface.getComunidades().get(i).getMembros().get(j).getUser());
+                    }
+                }
+            }
+            for(j = 0; j < iface.getComunidades().get(i).getMembros().size(); j++)
+            {
+                if(remover.getUser().equals(iface.getComunidades().get(i).getMembros().get(j).getUser()))
+                    iface.getComunidades().get(i).getMembros().remove(iface.getComunidades().get(i).getMembros().get(j));
+            }
+        }
+    }
+
+    private static void attatr(Rede iface, Usuario att, String before)
+    {
+        System.out.print("Atualizando dados...\n");
+        int i, j;
+        for(i = 0; i < iface.getUsers().size(); i++)//atualizar remetente da msg
+        {
+            for (j = 0; j < iface.getUsers().get(i).getMsg().size(); j++)
+            {
+                if(before.equals(iface.getUsers().get(i).getMsg().get(j).getUser() ) )
+                    iface.getUsers().get(i).getMsg().get(j).setUser(att.getUser());
+            }
+        }
+
+        for(i = 0; i < iface.getUsers().size(); i++)//att amigo
+        {
+            for (j = 0; j < iface.getUsers().get(i).getAmigos().size(); j++)
+            {
+                if(before.equals(iface.getUsers().get(i).getAmigos().get(j) ) )
+                {
+                    iface.getUsers().get(i).getAmigos().remove(before);
+                    iface.getUsers().get(i).getAmigos().add(att.getUser());
+                }
+            }
+        }
+
+        for(i = 0; i < iface.getUsers().size(); i++)//att sol de amz
+        {
+            for (j = 0; j < iface.getUsers().get(i).getSolicitacoes().size(); j++)
+            {
+                if(before.equals(iface.getUsers().get(i).getSolicitacoes().get(j) ) )
+                {
+                    iface.getUsers().get(i).getSolicitacoes().remove(before);
+                    iface.getUsers().get(i).getSolicitacoes().add(att.getUser());
+                }
+            }
+        }
+
+        for(i = 0; i < iface.getComunidades().size(); i++)//att info na comm
+        {
+            if(before.equals(iface.getComunidades().get(i).getAdm()))
+            {
+                iface.getComunidades().get(i).setAdm(att.getUser());
+            }
+
+            for(j = 0; j < iface.getComunidades().get(i).getMembros().size(); j++)
+            {
+                if(before.equals(iface.getComunidades().get(i).getMembros().get(j).getUser()))
+                {
+                    Usuario aux = iface.getComunidades().get(i).getMembros().get(j);
+                    iface.getComunidades().get(i).getMembros().remove(aux);
+                    iface.getComunidades().get(i).getMembros().add(att);
+                }
+            }
+        }
+    }
+
+
+
 
     private static void menu(Rede iface)
     {
@@ -358,7 +471,7 @@ public class Main
                     {
                         System.out.print("[2]  - Editar Conta selecionada!\n");
                         System.out.printf("Editando conta do Usuário logado!\nLogin: %s\nSe deseja editar outro Usuário, por favor logue com uma nova conta!\n", iface.getUsers().get(i).getLogin());
-                        editconta(iface.getUsers().get(i));
+                        editconta(iface.getUsers().get(i), iface);
                         logado = iface.getUsers().get(i);
                     }
                     else if (option == 3)
@@ -396,6 +509,7 @@ public class Main
                     else if (option == 8)
                     {
                         System.out.print("[8]  - Remoção de Conta selecionada!\n");
+                        removeacc(iface, iface.getUsers().get(i));
                     }
                 }
             }
